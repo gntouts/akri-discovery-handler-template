@@ -1,4 +1,4 @@
-module github.com/trstringer/akri-discovery-handler-template
+module github.com/gntouts/akri-discovery-handler-template
 
 go 1.21
 
