@@ -9,9 +9,9 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func RegisterDiscoveryHandler(agentSocket string, discoveryHandlerName string, discoverySocket string) error {
+func RegisterDiscoveryHandler(agentSocket string, discoveryHandlerName string, discoverySocket string, shared bool) error {
 	creds := grpc.WithTransportCredentials(insecure.NewCredentials())
-	conn, err := grpc.Dial(fmt.Sprintf("unix://%s", agentSocket), creds)
+	conn, err := grpc.NewClient(fmt.Sprintf("unix://%s", agentSocket), creds)
 	if err != nil {
 		return err
 	}
@@ -22,11 +22,8 @@ func RegisterDiscoveryHandler(agentSocket string, discoveryHandlerName string, d
 		&pb.RegisterDiscoveryHandlerRequest{
 			Name:         discoveryHandlerName,
 			Endpoint:     discoverySocket,
-			Shared:       true, // Replace with appropriate shared value
+			Shared:       shared, // Specifies whether this device could be used by multiple nodes
 			EndpointType: pb.RegisterDiscoveryHandlerRequest_UDS,
 		})
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
